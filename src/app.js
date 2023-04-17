@@ -6,6 +6,8 @@ const session = require('express-session');
 const bodyParser = require('body-parser')
 const loginRoutes = require('./routes/login');
 const cors = require('cors');
+const { PORT } = require('./config.js');
+const { dbConfig } = require('./db.js');
 
 const app = express();
 
@@ -13,12 +15,7 @@ app.use(cors({
 	origin: '*'
 }));
 
-app.set('port', 5000);
-
-app.engine('.hbs', engine({
-	extname: '.hbs',
-}));
-app.set('view engine', 'hbs');
+app.set('port', PORT);
 
 app.use(bodyParser.urlencoded({
   extended: true
@@ -26,13 +23,7 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json());
 
-app.use(myconnection(mysql, {
- host: 'localhost',
- user: 'root',
- password: '',
- port: 3306, 
- database: 'nodelogin'
-}, 'single'));
+app.use(myconnection(mysql, dbConfig, 'single'));
 
 app.use(session({
 	secret: 'secret',
