@@ -25,12 +25,6 @@ app.use(bodyParser.json());
 
 app.use(myconnection(mysql, dbConfig, 'single'));
 
-app.use(session({
-	secret: 'secret',
-	resave: true, 
-	saveUninitialized: true
-}));
-
 app.listen(app.get('port'), () => {
  console.log('listening on port ', app.get('port'));
 });
