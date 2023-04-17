@@ -71,9 +71,9 @@ function update(req, res) {
     // password: hash,
     date_of_birth: req.body.dateOfBirth,
     name: req.body.name,
-    email: req.user.email,
-    created_at: req.user.created_at,
-    deleted_at: null
+    // email: req.user.email,
+    // created_at: req.user.created_at,
+    // deleted_at: null
   }
   req.getConnection((err, conn) => {
     conn.query('UPDATE users SET ? WHERE email = ?', [data, req.user.email], (error, results, fields) => {
@@ -81,7 +81,14 @@ function update(req, res) {
         console.log(error);
         res.status(400).send({ status: false, error });
       }
-      const token = jwt.sign(data, 'patty');
+      const dataToken = {
+        date_of_birth: req.body.dateOfBirth,
+        name: req.body.name,
+        email: req.user.email,
+        created_at: req.user.created_at,
+        deleted_at: null
+      }
+      const token = jwt.sign(dataToken, 'patty');
       res.status(200).send({ status: true, token, data });
     }); 
   });
