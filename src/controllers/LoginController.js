@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 
 function register(req, res) {
+  console.log('ENTRE EN REGISTER');
   const hash = bcrypt.hashSync(req.body.password, saltRounds);
 
   const data = {
