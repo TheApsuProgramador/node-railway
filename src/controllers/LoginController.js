@@ -16,11 +16,25 @@ function register(req, res) {
   }
 
   req.getConnection((err, conn) => {
-    conn.query('SELECT email FROM users where email = ? and deleted_at is not null', [data.email], (error, rows) => {
+    // and deleted_at is not null
+    conn.query('SELECT email FROM users where email = ?', [data.email], (error, rows) => {
+      console.log(error);
       if(error) {
         if(error.code === 'ER_DUP_ENTRY') res.status(400).send({ status: false, data: 'Email en uso' });
         return false;
-      };
+      }else{
+        conn.query('INSERT INTO users SET ?', data, (error, results, fields) => {
+          if(error) {
+            if(error.code === 'ER_DUP_ENTRY') res.status(400).send({ status: false, data: 'Email en uso' });
+            return false;
+          };
+          const token = jwt.sign(data, 'patty');
+          delete data.password;
+          delete data.deleted_at;
+          res.status(200).send({ status: true, token, data });
+        });
+        return;
+      }
       if(rows.length > 0){
         conn.query('UPDATE users SET ? WHERE email = ?', [data, data.email], (error, results, fields) => {
           if(error){
