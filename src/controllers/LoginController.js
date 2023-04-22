@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 
 function register(req, res) {
-  console.log('ENTRE EN REGISTER');
   const hash = bcrypt.hashSync(req.body.password, saltRounds);
 
   const data = {
@@ -15,7 +14,6 @@ function register(req, res) {
     deleted_at: null
   }
 
-  console.log(data);
   req.getConnection((err, conn) => {
     conn.query('INSERT INTO users SET ?', data, (error, results, fields) => {
       console.log(error);

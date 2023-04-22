@@ -1,10 +1,9 @@
 const express = require('express');
-const { engine } = require('express-handlebars');
 const myconnection = require('express-myconnection');
 const mysql = require('mysql');
-const session = require('express-session');
 const bodyParser = require('body-parser')
 const loginRoutes = require('./routes/login');
+const paypalRoutes = require('./routes/paypal');
 const cors = require('cors');
 const { PORT } = require('./config.js');
 const { dbConfig } = require('./db.js');
@@ -30,6 +29,7 @@ app.listen(app.get('port'), () => {
 });
 
 app.use('/user', loginRoutes);
+app.use('/paypal', paypalRoutes);
 
 app.get('/', (req, res) => {
 	res.status(200).send({status: true})
