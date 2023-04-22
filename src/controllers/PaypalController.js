@@ -5,7 +5,7 @@ function verify(req, res){
   // return 
   //Read the IPN message sent from PayPal and prepend 'cmd=_notify-validate'
   console.log('Verifying');
-  console.log(JSON.stringify(body));
+  console.log(JSON.stringify(req.body));
   const body = 'cmd=_notify-validate&' + req.body;
 
 
