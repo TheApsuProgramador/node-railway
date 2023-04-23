@@ -5,9 +5,10 @@ function saveNewDate(req, body, deleteCutDate = false){
     const actualDate = new Date();
     actualDate.setMonth(deleteCutDate ? actualDate.getMonth() - 3 : actualDate.getMonth() + 3)
     data = {
-      cut_date: actualDate
+      cut_date: `${actualDate}`
     }
     console.log('data to update :>> ', data);
+    console.log('body.payer_id :>> ', body.payer_id);
     conn.query('UPDATE users SET ? WHERE payer_id = ? ', [data, body.payer_id], (error, results, fields) => {
       if(error){
         console.log(error);
