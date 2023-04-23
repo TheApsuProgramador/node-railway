@@ -103,7 +103,7 @@ function hasActiveSubscription(req, res){
         const actualDate = new Date();
         const cutDate = new Date(rows[0].cut_date);
         if(actualDate > cutDate){
-          res.status(403).send({ status: false, msg: 'Debes tener una suscripción activa para continuar.' });
+          res.status(403).send({ status: false, msg: 'Tienes una suscripción vencida, debes renovarla.' });
         }else{
           res.status(200).send({ status: true, msg: 'Ya posee una suscripción activa.' });
         }
