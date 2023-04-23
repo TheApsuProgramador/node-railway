@@ -1,13 +1,21 @@
 const request = require('request');
 
 function verify(req, res){
-  // console.log('Sillega :>> ', 'Sillega');
-  // res.status(200).send({status: true});
-  // return 
-  //Read the IPN message sent from PayPal and prepend 'cmd=_notify-validate'
+  res.status(200).send('OK');
+  res.end();
+
   console.log('Verifying');
   console.log(JSON.stringify(req.body));
-  const body = 'cmd=_notify-validate&' + JSON.stringify(req.body);
+
+  // const body = 'cmd=_notify-validate&' + JSON.stringify(req.body);
+  let postreq = 'cmd=_notify-validate';
+      
+  // Iterate the original request payload object
+  // and prepend its keys and values to the post string
+  Object.keys(req.body).map((key) => {
+    postreq = `${postreq}&${key}=${body[key]}`;
+    return key;
+  });
 
 
   const options = {
@@ -16,7 +24,7 @@ function verify(req, res){
     headers: {
         'Connection': 'close'
     },
-    body: body,
+    body: postreq,
     strictSSL: true,
     rejectUnauthorized: false,
     requestCert: true,
@@ -29,20 +37,20 @@ function verify(req, res){
   request(options, function callback(error, response, body) {
     if (!error && response.statusCode === 200) {
         //Inspect IPN validation result and act accordingly
-        if (body.substring(0, 8) === 'VERIFIED') {
+      if (body.substring(0, 8) === 'VERIFIED') {
 
-            //The IPN is verified
-          console.log('Verified IPN!');
-        } else if (body.substring(0, 7) === 'INVALID') {
-            //The IPN invalid
-          console.log('Invalid IPN!');
-          res.status(400).send({status: false})
-        } else {
-            //Unexpected response body
-          console.log('Unexpected response body!');
-          console.log(body);
-          res.status(400).send({status: false})
-        }
+        //The IPN is verified
+        console.log('Verified IPN!');
+      } else if (body.substring(0, 7) === 'INVALID') {
+        //The IPN invalid
+        console.log('Invalid IPN!');
+        res.status(400).send({status: false})
+      } else {
+        //Unexpected response body
+        console.log('Unexpected response body!');
+        console.log(body);
+        res.status(400).send({status: false})
+      }
     }else{
       //Unexpected response
       console.log('Unexpected response!');
