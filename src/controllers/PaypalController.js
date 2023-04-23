@@ -3,8 +3,9 @@ const request = require('request');
 function saveNewDate(req, body){
   req.getConnection((err, conn) => {
     const actualDate = new Date();
+    actualDate.setMonth(actualDate.getMonth() + 3)
     data = {
-      cut_date: actualDate.setMonth(actualDate.getMonth() + 3)
+      cut_date: actualDate
     }
 
     conn.query('UPDATE users SET ? WHERE payer_id = ? ', [data, body.payer_id], (error, results, fields) => {
@@ -84,7 +85,7 @@ function firstPayment(req, res){
         res.status(400).send({ status: false, err});
         return false
       }
-      res.status(200).send({ status: false, msg: 'Created payer id'});
+      res.status(200).send({ status: true, msg: 'Created payer id'});
       saveNewDate(req, body);
       return true
     })
