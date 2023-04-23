@@ -3,9 +3,9 @@ const request = require('request');
 function saveNewDate(req, body, deleteCutDate = false){
   req.getConnection((err, conn) => {
     const actualDate = new Date();
-    actualDate.setMonth(deleteCutDate ? actualDate.getMonth() - 3 : actualDate.getMonth() + 3)
+    actualDate.setMonth(actualDate.getMonth() + 3)
     data = {
-      cut_date: `${actualDate}`
+      cut_date: deleteCutDate ? null : actualDate
     }
     console.log('data to update :>> ', data);
     console.log('body.payer_id :>> ', body.payer_id);
@@ -57,7 +57,7 @@ function verify(req, res){
         //The IPN is verified
         let deleteCutDate = false;
         if(req.body.txn_type === 'recurring_payment_profile_cancel') deleteCutDate = true;
-        saveNewDate(req, body, deleteCutDate);
+        saveNewDate(req, req.body, deleteCutDate);
         console.log('Verified IPN!');
       } else if (body.substring(0, 7) === 'INVALID') {
         //The IPN invalid
