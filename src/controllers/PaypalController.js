@@ -55,7 +55,7 @@ function verify(req, res){
       if (body.substring(0, 8) === 'VERIFIED') {
         //The IPN is verified
         let deleteCutDate = false;
-        if(req.body.txn_type === 'subscr_eot') deleteCutDate = true;
+        if(req.body.txn_type === 'recurring_payment_profile_cancel') deleteCutDate = true;
         saveNewDate(req, body, deleteCutDate);
         console.log('Verified IPN!');
       } else if (body.substring(0, 7) === 'INVALID') {
@@ -66,7 +66,7 @@ function verify(req, res){
         console.log('Unexpected response body!');
         console.log(body);
       }
-      
+
     }else{
       //Unexpected response
       console.log('Unexpected response!');
