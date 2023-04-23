@@ -1,14 +1,25 @@
 const request = require('request');
 
+function saveNewDate(req, body){
+  req.getConnection((err, conn) => {
+    const actualDate = new Date();
+    data = {
+      cut_date: actualDate.setMonth(actualDate.getMonth() + 3)
+    }
+
+    conn.query('UPDATE users SET ? WHERE payer_id = ? ', [data, body.payer_id], (error, results, fields) => {
+      if(error){
+        console.log(error);
+      }
+    })
+  })
+}
+
 function verify(req, res){
   res.status(200).send('OK');
   res.end();
 
   const body = req.body;
-  console.log('Verifying');
-  console.log(JSON.stringify(req.body));
-
-  // const body = 'cmd=_notify-validate&' + JSON.stringify(req.body);
   let postreq = 'cmd=_notify-validate';
       
   // Iterate the original request payload object
@@ -39,7 +50,7 @@ function verify(req, res){
     if (!error && response.statusCode === 200) {
         //Inspect IPN validation result and act accordingly
       if (body.substring(0, 8) === 'VERIFIED') {
-
+        saveNewDate(req, body);
         //The IPN is verified
         console.log('Verified IPN!');
       } else if (body.substring(0, 7) === 'INVALID') {
@@ -61,58 +72,25 @@ function verify(req, res){
     }
 
   });
+}
 
-
-  // fetch('https://www.sandbox.paypal.com/cgi-bin/webscr', options)
-  //   .then(res => {
-  //     if (res.substring(0, 8) === 'VERIFIED') {
-  //       // req.getConnection((err, conn) => {
-  //       //   conn.query('INSERT INTO users SET ?', data, (error, results, fields) => {
-
-  //       //   })
-  //       // })
-  //       //The IPN is verified
-  //       console.log('Verified IPN!');
-  //     } else if (res.substring(0, 7) === 'INVALID') {
-
-  //         //The IPN invalid
-  //       console.log('Invalid IPN!');
-  //     } else {
-  //       //Unexpected response res
-  //       console.log('Unexpected response res!');
-  //       console.log(res);
-  //     }
-  //   })
-  //   .catch(err => {
-  //     console.log('Unexpected response!');
-  //     console.log(err);
-  //   })
-
-  // request(options, function callback(error, response, body) {
-  //   if (!error && response.statusCode === 200) {
-  //     //Inspect IPN validation result and act accordingly
-  //     if (body.substring(0, 8) === 'VERIFIED') {
-
-  //         //The IPN is verified
-  //         console.log('Verified IPN!');
-  //     } else if (body.substring(0, 7) === 'INVALID') {
-
-  //         //The IPN invalid
-  //         console.log('Invalid IPN!');
-  //     } else {
-  //         //Unexpected response body
-  //         console.log('Unexpected response body!');
-  //         console.log(body);
-  //     }
-  //   }else{
-  //     //Unexpected response
-  //     console.log('Unexpected response!');
-  //     console.log(response);
-  //   }
-
-  // });
+function firstPayment(req, res){
+  req.getConnection((err, conn) => {
+    const body = {
+      payer_id: req.body.payer_id,
+    }
+    conn.query('UPDATE users SET ? WHERE email = ?', [body, req.user.email], (error, results, fields) => {
+      if(err){
+        res.status(400).send({ status: false, err});
+        return false
+      }
+      saveNewDate(req, body);
+      return true
+    })
+  })
 }
 
 module.exports = {
   verify,
+  firstPayment
 }

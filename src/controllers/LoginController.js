@@ -78,6 +78,7 @@ function update(req, res) {
       if(error){
         console.log(error);
         res.status(400).send({ status: false, error });
+        return false;
       }
       const dataToken = {
         date_of_birth: req.body.dateOfBirth,
