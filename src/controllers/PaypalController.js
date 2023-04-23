@@ -1,11 +1,11 @@
 const request = require('request');
 
-function saveNewDate(req, body){
+function saveNewDate(req, body, deleteCutDate = false){
   req.getConnection((err, conn) => {
     const actualDate = new Date();
     actualDate.setMonth(actualDate.getMonth() + 3)
     data = {
-      cut_date: actualDate
+      cut_date: deleteCutDate ? undefined : actualDate
     }
 
     conn.query('UPDATE users SET ? WHERE payer_id = ? ', [data, body.payer_id], (error, results, fields) => {
@@ -21,6 +21,7 @@ function verify(req, res){
   res.end();
 
   const body = req.body;
+  console.log('body :>> ', JSON.stringify(body));
   let postreq = 'cmd=_notify-validate';
       
   // Iterate the original request payload object
@@ -49,21 +50,23 @@ function verify(req, res){
   //sandbox para depuracion
   request(options, function callback(error, response, body) {
     if (!error && response.statusCode === 200) {
-        //Inspect IPN validation result and act accordingly
+      //Inspect IPN validation result and act accordingly
+
       if (body.substring(0, 8) === 'VERIFIED') {
-        saveNewDate(req, body);
         //The IPN is verified
+        let deleteCutDate = false;
+        if(req.body.txn_type === 'subscr_eot') deleteCutDate = true;
+        saveNewDate(req, body, deleteCutDate);
         console.log('Verified IPN!');
       } else if (body.substring(0, 7) === 'INVALID') {
         //The IPN invalid
         console.log('Invalid IPN!');
-        res.status(400).send({status: false})
       } else {
         //Unexpected response body
         console.log('Unexpected response body!');
         console.log(body);
-        res.status(400).send({status: false})
       }
+      
     }else{
       //Unexpected response
       console.log('Unexpected response!');
@@ -86,11 +89,13 @@ function firstPayment(req, res){
         return false
       }
       res.status(200).send({ status: true, msg: 'Created payer id'});
-      saveNewDate(req, body);
+      saveNewDate(req, body, false);
       return true
     })
   })
 }
+
+
 
 module.exports = {
   verify,
