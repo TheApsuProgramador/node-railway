@@ -96,9 +96,26 @@ function firstPayment(req, res){
   })
 }
 
-
+function hasActiveSubscription(req, res){
+  req.getConnection((err, conn) => {
+    conn.query('SELECT * from users WHERE email = ? AND cut_date is not null', [req.user.email], (err, rows) => {
+      if(rows.length > 0){
+        const actualDate = new Date();
+        const cutDate = new Date(rows[0].cut_date);
+        if(actualDate > cutDate){
+          res.status(403).send({ status: false, msg: 'Debes tener una suscripcion activa para continuar' });
+        }else{
+          res.status(200).send({ status: false });
+        }
+      }else{
+        res.status(403).send({ status: false, msg: 'Debes tener una suscripcion activa para continuar' });
+      }
+    })
+  })
+}
 
 module.exports = {
   verify,
-  firstPayment
+  firstPayment,
+  hasActiveSubscription
 }

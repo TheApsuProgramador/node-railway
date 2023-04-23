@@ -5,5 +5,6 @@ const auth = require('../auth/auth')
 
 router.post('/', PaypalController.verify);
 router.post('/store-payment', auth, PaypalController.firstPayment);
+router.get('/is-active', auth, PaypalController.hasActiveSubscription);
 
 module.exports = router;
