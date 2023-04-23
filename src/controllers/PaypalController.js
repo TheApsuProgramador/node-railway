@@ -84,6 +84,7 @@ function firstPayment(req, res){
         res.status(400).send({ status: false, err});
         return false
       }
+      res.status(200).send({ status: false, msg: 'Created payer id'});
       saveNewDate(req, body);
       return true
     })
