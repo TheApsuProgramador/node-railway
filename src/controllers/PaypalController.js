@@ -3,9 +3,9 @@ const request = require('request');
 function saveNewDate(req, body, deleteCutDate = false){
   req.getConnection((err, conn) => {
     const actualDate = new Date();
-    actualDate.setMonth(actualDate.getMonth() + 3)
+    actualDate.setMonth(deleteCutDate ? actualDate.getMonth() - 3 : actualDate.getMonth() + 3)
     data = {
-      cut_date: deleteCutDate ? null : actualDate
+      cut_date: actualDate
     }
     console.log('data to update :>> ', data);
     conn.query('UPDATE users SET ? WHERE payer_id = ? ', [data, body.payer_id], (error, results, fields) => {
