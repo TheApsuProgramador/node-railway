@@ -7,11 +7,11 @@ function verify(req, res){
   //Read the IPN message sent from PayPal and prepend 'cmd=_notify-validate'
   console.log('Verifying');
   console.log(JSON.stringify(req.body));
-  const body = 'cmd=_notify-validate&' + req.body;
+  const body = 'cmd=_notify-validate&' + JSON.stringify(req.body);
 
 
   const options = {
-    url: 'https://www.sandbox.paypal.com/cgi-bin/webscr',
+    url: 'https://www.sandbox.paypal.com/cgi-bin/webscr', //https://ipnpb.paypal.com/cgi-bin/webscr,
     method: 'POST',
     headers: {
         'Connection': 'close'
