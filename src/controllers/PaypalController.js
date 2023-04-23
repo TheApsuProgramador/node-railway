@@ -4,6 +4,7 @@ function verify(req, res){
   res.status(200).send('OK');
   res.end();
 
+  const body = req.body;
   console.log('Verifying');
   console.log(JSON.stringify(req.body));
 
@@ -12,7 +13,7 @@ function verify(req, res){
       
   // Iterate the original request payload object
   // and prepend its keys and values to the post string
-  Object.keys(req.body).map((key) => {
+  Object.keys(body).map((key) => {
     postreq = `${postreq}&${key}=${body[key]}`;
     return key;
   });
