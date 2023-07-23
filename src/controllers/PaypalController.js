@@ -37,7 +37,7 @@ function verify(req, res){
     url: 'https://www.sandbox.paypal.com/cgi-bin/webscr', //https://ipnpb.paypal.com/cgi-bin/webscr,
     method: 'POST',
     headers: {
-        'Connection': 'close'
+      'Connection': 'close'
     },
     body: postreq,
     strictSSL: true,

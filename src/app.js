@@ -1,6 +1,6 @@
 const express = require('express');
 const myconnection = require('express-myconnection');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const bodyParser = require('body-parser')
 const loginRoutes = require('./routes/login');
 const paypalRoutes = require('./routes/paypal');
