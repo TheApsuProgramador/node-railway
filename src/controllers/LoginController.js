@@ -3,7 +3,13 @@ const jwt = require('jsonwebtoken');
 const saltRounds = 10;
 
 function register(req, res) {
-  const hash = bcrypt.hashSync(req.body.password, saltRounds);
+  const isGoogleProvider = req.body.provider;
+  let hash = '';
+  if(!isGoogleProvider){
+    hash = bcrypt.hashSync(req.body.password, saltRounds);
+  } else {
+    req.body.dateOfBirth = '';
+  }
 
   const data = {
     email: req.body.email,
