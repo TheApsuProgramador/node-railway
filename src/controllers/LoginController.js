@@ -24,7 +24,13 @@ function register(req, res) {
     conn.query('INSERT INTO users SET ?', data, (error, results, fields) => {
       console.log(error);
       if(error) {
-        if(error.code === 'ER_DUP_ENTRY') res.status(400).send({ status: false, data: 'Email en uso' });
+        if(error.code === 'ER_DUP_ENTRY'){
+          if(isGoogleProvider){
+            auth(req, res);
+          }else{
+            res.status(400).send({ status: false, data: 'Email en uso' })
+          }
+        };
         return false;
       };
       const token = jwt.sign(data, 'patty');
@@ -115,13 +121,16 @@ function destroy(req, res) {
 }
 
 function auth(req, res) {
+  const isGoogleProvider = req.body.provider;
 	let email = req.body.email;
 	let password = req.body.password;
   req.getConnection((err, conn) => {
     conn.query('SELECT * FROM users WHERE email = ?;', [email], (err, rows) => {
       if(rows.length > 0) {
-        const isSame = bcrypt.compareSync(password, rows[0].password);
-        if(!isSame) return  res.status(400).send({ status: false, data: 'Usuario o contraseña incorrectos' });
+        if(!isGoogleProvider){
+          const isSame = bcrypt.compareSync(password, rows[0].password);
+          if(!isSame) return  res.status(400).send({ status: false, data: 'Usuario o contraseña incorrectos' });
+        }
         const token = jwt.sign(req.body, 'patty');
         delete rows[0].password;
         delete rows[0].deleted_at;
