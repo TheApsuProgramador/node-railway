@@ -118,7 +118,7 @@ function auth(req, res) {
 	let email = req.body.email;
 	let password = req.body.password;
   req.getConnection((err, conn) => {
-    conn.query('SELECT * FROM users WHERE email = ? AND deleted_at is NULL;', [email], (err, rows) => {
+    conn.query('SELECT * FROM users WHERE email = ?;', [email], (err, rows) => {
       if(rows.length > 0) {
         const isSame = bcrypt.compareSync(password, rows[0].password);
         if(!isSame) return  res.status(400).send({ status: false, data: 'Usuario o contraseña incorrectos' });
