@@ -7,14 +7,12 @@ function saveNewDate(req, body, deleteCutDate = false) {
     data = {
       cut_date: deleteCutDate ? null : actualDate,
     };
-    console.log("data to update :>> ", data);
-    console.log("body.payer_id :>> ", body.payer_id);
     conn.query(
       "UPDATE users SET ? WHERE payer_id = ? ",
       [data, body.payer_id],
       (error, results, fields) => {
         if (error) {
-          console.log(error);
+          console.error(error);
         }
       }
     );
@@ -26,7 +24,6 @@ function verify(req, res) {
   res.end();
 
   const body = req.body;
-  console.log("body :>> ", JSON.stringify(body));
   let postreq = "cmd=_notify-validate";
 
   // Iterate the original request payload object
@@ -73,8 +70,6 @@ function verify(req, res) {
       }
     } else {
       //Unexpected response
-      console.log("Unexpected response!");
-      console.log(response);
       res.status(400).send({ status: false });
     }
   });
@@ -102,11 +97,11 @@ function firstPayment(req, res) {
 }
 
 function hasActiveSubscription(req, res) {
-  console.log("req.user :>> ", JSON.stringify(req.user));
+  const user = req.user;
   req.getConnection((err, conn) => {
     conn.query(
-      "SELECT * from users WHERE email = ? AND cut_date is not null",
-      [req.user.email],
+      "SELECT * FROM users WHERE email = ? AND cut_date IS NOT NULL;",
+      [user.email],
       (err, rows) => {
         if (rows && rows?.length > 0) {
           const actualDate = new Date();

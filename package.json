@@ -19,7 +19,6 @@
     "express-myconnection": "^1.0.4",
     "express-session": "^1.17.2",
     "jsonwebtoken": "^9.0.0",
-    "mysql": "^2.18.1",
     "mysql2": "^3.5.2",
     "nodemon": "^2.0.15",
     "request": "^2.88.2"

@@ -4,7 +4,6 @@ const saltRounds = 10;
 
 function register(req, res) {
   const isGoogleProvider = req.body.provider;
-  console.log("isGoogleProvider :>> ", isGoogleProvider);
   let hash = "";
   if (!isGoogleProvider) {
     hash = bcrypt.hashSync(req.body.password, saltRounds);
@@ -17,7 +16,7 @@ function register(req, res) {
     password: hash,
     date_of_birth: req.body.dateOfBirth,
     name: req.body.name,
-    created_at: new Date(),
+    created_at: isGoogleProvider ? null : new Date(),
     deleted_at: null,
   };
 
@@ -28,9 +27,10 @@ function register(req, res) {
         "SELECT * FROM users WHERE email = ?;",
         [data.email],
         (err, rows) => {
-          console.log("rows :>> ", JSON.stringify(rows));
           if (rows.length) {
             existEmail = true;
+            data.password = rows[0].password;
+            data.created_at = rows[0].created_at;
             const token = jwt.sign(data, "patty");
             delete data.password;
             delete data.deleted_at;
@@ -106,7 +106,7 @@ function update(req, res) {
       [data, req.user.email],
       (error, results, fields) => {
         if (error) {
-          console.log(error);
+          console.error(error);
           res.status(400).send({ status: false, error });
           return false;
         }
@@ -134,7 +134,7 @@ function destroy(req, res) {
       [data, req.user.email],
       (error, results, fields) => {
         if (error) {
-          console.log(error);
+          console.error(error);
           res.status(400).send({ status: false, error });
         }
         res.status(200).send({ status: true, msg: "Eliminado correctamente" });
@@ -149,14 +149,18 @@ function auth(req, res) {
   let password = req.body.password;
   req.getConnection((err, conn) => {
     conn.query("SELECT * FROM users WHERE email = ?;", [email], (err, rows) => {
-      if (rows.length > 0) {
+      if (rows?.length > 0) {
         if (!isGoogleProvider) {
-          const isSame = bcrypt.compareSync(password, rows[0].password);
-          if (!isSame)
+          const correctPassword = bcrypt.compareSync(
+            password,
+            rows[0].password
+          );
+          if (!correctPassword) {
             return res.status(400).send({
               status: false,
               data: "Usuario o contraseña incorrectos",
             });
+          }
         }
         const token = jwt.sign(req.body, "patty");
         delete rows[0].password;
