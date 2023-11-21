@@ -1,14 +1,14 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const saltRounds = 10;
 
 function register(req, res) {
   const isGoogleProvider = req.body.provider;
-  let hash = '';
-  if(!isGoogleProvider){
+  let hash = "";
+  if (!isGoogleProvider) {
     hash = bcrypt.hashSync(req.body.password, saltRounds);
   } else {
-    req.body.dateOfBirth = '';
+    req.body.dateOfBirth = "";
   }
 
   const data = {
@@ -17,23 +17,30 @@ function register(req, res) {
     date_of_birth: req.body.dateOfBirth,
     name: req.body.name,
     created_at: new Date(),
-    deleted_at: null
-  }
+    deleted_at: null,
+  };
 
   req.getConnection((err, conn) => {
-    conn.query('INSERT INTO users SET ?', data, (error, results, fields) => {
-      console.log(error);
-      if(error) {
-        if(error.code === 'ER_DUP_ENTRY'){
-          if(isGoogleProvider){
+    if (isGoogleProvider) {
+      conn.query(
+        "SELECT (email) FROM users WHERE email = ?;",
+        data.email,
+        (err, rows) => {
+          if (rows.length) {
             auth(req, res);
-          }else{
-            res.status(400).send({ status: false, data: 'Email en uso' })
+            return;
           }
-        };
+        }
+      );
+    }
+    conn.query("INSERT INTO users SET ?", data, (error, results, fields) => {
+      if (error) {
+        if (error.code === "ER_DUP_ENTRY") {
+          res.status(400).send({ status: false, data: "Email en uso" });
+        }
         return false;
-      };
-      const token = jwt.sign(data, 'patty');
+      }
+      const token = jwt.sign(data, "patty");
       delete data.password;
       delete data.deleted_at;
       return res.status(200).send({ status: true, token, data });
@@ -46,33 +53,32 @@ function register(req, res) {
     //     if(error.code === 'ER_DUP_ENTRY') res.status(400).send({ status: false, data: 'Email en uso' });
     //     return false;
     //   }else{
-        
-    //   }
-      // if(rows.length > 0){
-      //   conn.query('UPDATE users SET ? WHERE email = ?', [data, data.email], (error, results, fields) => {
-      //     if(error){
-      //       console.log(error);
-      //       res.status(400).send({ status: false, error });
-      //     }
-      //     const token = jwt.sign(data, 'patty');
-      //     delete data.password;
-      //     delete data.deleted_at;
-      //     res.status(200).send({ status: true, token, data });
-      //   }); 
-      // }else{
-      //   conn.query('INSERT INTO users SET ?', data, (error, results, fields) => {
-      //     if(error) {
-      //       if(error.code === 'ER_DUP_ENTRY') res.status(400).send({ status: false, data: 'Email en uso' });
-      //       return false;
-      //     };
-      //     const token = jwt.sign(data, 'patty');
-      //     delete data.password;
-      //     delete data.deleted_at;
-      //     res.status(200).send({ status: true, token, data });
-      //   });
-      // }
-    // });
 
+    //   }
+    // if(rows.length > 0){
+    //   conn.query('UPDATE users SET ? WHERE email = ?', [data, data.email], (error, results, fields) => {
+    //     if(error){
+    //       console.log(error);
+    //       res.status(400).send({ status: false, error });
+    //     }
+    //     const token = jwt.sign(data, 'patty');
+    //     delete data.password;
+    //     delete data.deleted_at;
+    //     res.status(200).send({ status: true, token, data });
+    //   });
+    // }else{
+    //   conn.query('INSERT INTO users SET ?', data, (error, results, fields) => {
+    //     if(error) {
+    //       if(error.code === 'ER_DUP_ENTRY') res.status(400).send({ status: false, data: 'Email en uso' });
+    //       return false;
+    //     };
+    //     const token = jwt.sign(data, 'patty');
+    //     delete data.password;
+    //     delete data.deleted_at;
+    //     res.status(200).send({ status: true, token, data });
+    //   });
+    // }
+    // });
   });
 }
 
@@ -84,64 +90,77 @@ function update(req, res) {
     // email: req.user.email,
     // created_at: req.user.created_at,
     // deleted_at: null
-  }
+  };
   req.getConnection((err, conn) => {
-    conn.query('UPDATE users SET ? WHERE email = ?', [data, req.user.email], (error, results, fields) => {
-      if(error){
-        console.log(error);
-        res.status(400).send({ status: false, error });
-        return false;
+    conn.query(
+      "UPDATE users SET ? WHERE email = ?",
+      [data, req.user.email],
+      (error, results, fields) => {
+        if (error) {
+          console.log(error);
+          res.status(400).send({ status: false, error });
+          return false;
+        }
+        const dataToken = {
+          date_of_birth: req.body.dateOfBirth,
+          name: req.body.name,
+          email: req.user.email,
+          created_at: req.user.created_at,
+          deleted_at: null,
+        };
+        const token = jwt.sign(dataToken, "patty");
+        res.status(200).send({ status: true, token, data });
       }
-      const dataToken = {
-        date_of_birth: req.body.dateOfBirth,
-        name: req.body.name,
-        email: req.user.email,
-        created_at: req.user.created_at,
-        deleted_at: null
-      }
-      const token = jwt.sign(dataToken, 'patty');
-      res.status(200).send({ status: true, token, data });
-    }); 
+    );
   });
 }
 
 function destroy(req, res) {
   const data = {
-    deleted_at: new Date()
-  }
+    deleted_at: new Date(),
+  };
   req.getConnection((err, conn) => {
-    conn.query('UPDATE users SET ? WHERE email = ?', [data, req.user.email], (error, results, fields) => {
-      if(error){
-        console.log(error);
-        res.status(400).send({ status: false, error });
+    conn.query(
+      "UPDATE users SET ? WHERE email = ?",
+      [data, req.user.email],
+      (error, results, fields) => {
+        if (error) {
+          console.log(error);
+          res.status(400).send({ status: false, error });
+        }
+        res.status(200).send({ status: true, msg: "Eliminado correctamente" });
       }
-      res.status(200).send({ status: true, msg: 'Eliminado correctamente' });
-    }); 
+    );
   });
 }
 
 function auth(req, res) {
   const isGoogleProvider = req.body.provider;
-	let email = req.body.email;
-	let password = req.body.password;
+  let email = req.body.email;
+  let password = req.body.password;
   req.getConnection((err, conn) => {
-    conn.query('SELECT * FROM users WHERE email = ?;', [email], (err, rows) => {
-      if(rows.length > 0) {
-        if(!isGoogleProvider){
+    conn.query("SELECT * FROM users WHERE email = ?;", [email], (err, rows) => {
+      if (rows.length > 0) {
+        if (!isGoogleProvider) {
           const isSame = bcrypt.compareSync(password, rows[0].password);
-          if(!isSame) return  res.status(400).send({ status: false, data: 'Usuario o contraseña incorrectos' });
+          if (!isSame)
+            return res.status(400).send({
+              status: false,
+              data: "Usuario o contraseña incorrectos",
+            });
         }
-        const token = jwt.sign(req.body, 'patty');
+        const token = jwt.sign(req.body, "patty");
         delete rows[0].password;
         delete rows[0].deleted_at;
         return res.status(200).send({ status: true, token, data: rows[0] });
       } else {
-        return res.status(400).send({ status: false, data: 'Usuario o contraseña incorrectos' });
+        return res
+          .status(400)
+          .send({ status: false, data: "Usuario o contraseña incorrectos" });
       }
     });
   });
 }
-
 
 function verify(req, res) {
   res.status(200).send({ status: true });
@@ -152,5 +171,5 @@ module.exports = {
   auth,
   verify,
   update,
-  destroy
-}
+  destroy,
+};
