@@ -31,8 +31,10 @@ function register(req, res) {
           console.log("rows :>> ", JSON.stringify(rows));
           if (rows.length) {
             existEmail = true;
-            auth(req, res);
-            return;
+            const token = jwt.sign(data, "patty");
+            delete data.password;
+            delete data.deleted_at;
+            return res.status(200).send({ status: true, token, data });
           }
         }
       );
