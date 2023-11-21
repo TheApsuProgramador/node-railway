@@ -4,6 +4,7 @@ const saltRounds = 10;
 
 function register(req, res) {
   const isGoogleProvider = req.body.provider;
+  console.log("isGoogleProvider :>> ", isGoogleProvider);
   let hash = "";
   if (!isGoogleProvider) {
     hash = bcrypt.hashSync(req.body.password, saltRounds);
@@ -21,30 +22,36 @@ function register(req, res) {
   };
 
   req.getConnection((err, conn) => {
+    let existEmail = false;
     if (isGoogleProvider) {
       conn.query(
-        "SELECT (email) FROM users WHERE email = ?;",
+        "SELECT * FROM users WHERE email = ?;",
         [data.email],
         (err, rows) => {
+          console.log("rows :>> ", JSON.stringify(rows));
           if (rows.length) {
+            existEmail = true;
             auth(req, res);
             return;
           }
         }
       );
     }
-    conn.query("INSERT INTO users SET ?", data, (error, results, fields) => {
-      if (error) {
-        if (error.code === "ER_DUP_ENTRY") {
-          res.status(400).send({ status: false, data: "Email en uso" });
+
+    if (!existEmail) {
+      conn.query("INSERT INTO users SET ?", data, (error, results, fields) => {
+        if (error) {
+          if (error.code === "ER_DUP_ENTRY") {
+            res.status(400).send({ status: false, data: "Email en uso" });
+          }
+          return false;
         }
-        return false;
-      }
-      const token = jwt.sign(data, "patty");
-      delete data.password;
-      delete data.deleted_at;
-      return res.status(200).send({ status: true, token, data });
-    });
+        const token = jwt.sign(data, "patty");
+        delete data.password;
+        delete data.deleted_at;
+        return res.status(200).send({ status: true, token, data });
+      });
+    }
 
     // and deleted_at is not null
     // conn.query('SELECT email FROM users where email = ?', data.email, (error, rows) => {
