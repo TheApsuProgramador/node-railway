@@ -24,7 +24,7 @@ function register(req, res) {
     if (isGoogleProvider) {
       conn.query(
         "SELECT (email) FROM users WHERE email = ?;",
-        data.email,
+        [data.email],
         (err, rows) => {
           if (rows.length) {
             auth(req, res);
