@@ -108,7 +108,7 @@ function hasActiveSubscription(req, res) {
       "SELECT * from users WHERE email = ? AND cut_date is not null",
       [req.user.email],
       (err, rows) => {
-        if (rows?.length > 0) {
+        if (rows && rows?.length > 0) {
           const actualDate = new Date();
           const cutDate = new Date(rows[0].cut_date);
           if (actualDate > cutDate) {
