@@ -1,30 +1,34 @@
-const request = require('request');
+const request = require("request");
 
-function saveNewDate(req, body, deleteCutDate = false){
+function saveNewDate(req, body, deleteCutDate = false) {
   req.getConnection((err, conn) => {
     const actualDate = new Date();
-    actualDate.setMonth(actualDate.getMonth() + 3)
+    actualDate.setMonth(actualDate.getMonth() + 3);
     data = {
-      cut_date: deleteCutDate ? null : actualDate
-    }
-    console.log('data to update :>> ', data);
-    console.log('body.payer_id :>> ', body.payer_id);
-    conn.query('UPDATE users SET ? WHERE payer_id = ? ', [data, body.payer_id], (error, results, fields) => {
-      if(error){
-        console.log(error);
+      cut_date: deleteCutDate ? null : actualDate,
+    };
+    console.log("data to update :>> ", data);
+    console.log("body.payer_id :>> ", body.payer_id);
+    conn.query(
+      "UPDATE users SET ? WHERE payer_id = ? ",
+      [data, body.payer_id],
+      (error, results, fields) => {
+        if (error) {
+          console.log(error);
+        }
       }
-    })
-  })
+    );
+  });
 }
 
-function verify(req, res){
-  res.status(200).send('OK');
+function verify(req, res) {
+  res.status(200).send("OK");
   res.end();
 
   const body = req.body;
-  console.log('body :>> ', JSON.stringify(body));
-  let postreq = 'cmd=_notify-validate';
-      
+  console.log("body :>> ", JSON.stringify(body));
+  let postreq = "cmd=_notify-validate";
+
   // Iterate the original request payload object
   // and prepend its keys and values to the post string
   Object.keys(body).map((key) => {
@@ -32,18 +36,17 @@ function verify(req, res){
     return key;
   });
 
-
   const options = {
-    url: 'https://www.sandbox.paypal.com/cgi-bin/webscr', //https://ipnpb.paypal.com/cgi-bin/webscr,
-    method: 'POST',
+    url: "https://www.sandbox.paypal.com/cgi-bin/webscr", //https://ipnpb.paypal.com/cgi-bin/webscr,
+    method: "POST",
     headers: {
-      'Connection': 'close'
+      Connection: "close",
     },
     body: postreq,
     strictSSL: true,
     rejectUnauthorized: false,
     requestCert: true,
-    agent: false
+    agent: false,
   };
 
   //POST IPN data back to PayPal to validate
@@ -53,69 +56,84 @@ function verify(req, res){
     if (!error && response.statusCode === 200) {
       //Inspect IPN validation result and act accordingly
 
-      if (body.substring(0, 8) === 'VERIFIED') {
+      if (body.substring(0, 8) === "VERIFIED") {
         //The IPN is verified
         let deleteCutDate = false;
-        if(req.body.txn_type === 'recurring_payment_profile_cancel') deleteCutDate = true;
+        if (req.body.txn_type === "recurring_payment_profile_cancel")
+          deleteCutDate = true;
         saveNewDate(req, req.body, deleteCutDate);
-        console.log('Verified IPN!');
-      } else if (body.substring(0, 7) === 'INVALID') {
+        console.log("Verified IPN!");
+      } else if (body.substring(0, 7) === "INVALID") {
         //The IPN invalid
-        console.log('Invalid IPN!');
+        console.log("Invalid IPN!");
       } else {
         //Unexpected response body
-        console.log('Unexpected response body!');
+        console.log("Unexpected response body!");
         console.log(body);
       }
-
-    }else{
+    } else {
       //Unexpected response
-      console.log('Unexpected response!');
+      console.log("Unexpected response!");
       console.log(response);
-      res.status(400).send({status: false})
-    
+      res.status(400).send({ status: false });
     }
-
   });
 }
 
-function firstPayment(req, res){
+function firstPayment(req, res) {
   req.getConnection((err, conn) => {
     const body = {
       payer_id: req.body.payer_id,
-    }
-    conn.query('UPDATE users SET ? WHERE email = ?', [body, req.user.email], (error, results, fields) => {
-      if(err){
-        res.status(400).send({ status: false, err});
-        return false
+    };
+    conn.query(
+      "UPDATE users SET ? WHERE email = ?",
+      [body, req.user.email],
+      (error, results, fields) => {
+        if (err) {
+          res.status(400).send({ status: false, err });
+          return false;
+        }
+        res.status(200).send({ status: true, msg: "Created payer id" });
+        saveNewDate(req, body, false);
+        return true;
       }
-      res.status(200).send({ status: true, msg: 'Created payer id'});
-      saveNewDate(req, body, false);
-      return true
-    })
-  })
+    );
+  });
 }
 
-function hasActiveSubscription(req, res){
+function hasActiveSubscription(req, res) {
+  console.log("req.user :>> ", JSON.stringify(req.user));
   req.getConnection((err, conn) => {
-    conn.query('SELECT * from users WHERE email = ? AND cut_date is not null', [req.user.email], (err, rows) => {
-      if(rows.length > 0){
-        const actualDate = new Date();
-        const cutDate = new Date(rows[0].cut_date);
-        if(actualDate > cutDate){
-          res.status(403).send({ status: false, msg: 'Tienes una suscripción vencida, debes renovarla.' });
-        }else{
-          res.status(200).send({ status: true, msg: 'Ya posee una suscripción activa.' });
+    conn.query(
+      "SELECT * from users WHERE email = ? AND cut_date is not null",
+      [req.user.email],
+      (err, rows) => {
+        if (rows?.length > 0) {
+          const actualDate = new Date();
+          const cutDate = new Date(rows[0].cut_date);
+          if (actualDate > cutDate) {
+            res.status(403).send({
+              status: false,
+              msg: "Tienes una suscripción vencida, debes renovarla.",
+            });
+          } else {
+            res
+              .status(200)
+              .send({ status: true, msg: "Ya posee una suscripción activa." });
+          }
+        } else {
+          res.status(403).send({
+            status: false,
+            msg: "Debes tener una suscripción activa para continuar.",
+          });
         }
-      }else{
-        res.status(403).send({ status: false, msg: 'Debes tener una suscripción activa para continuar.' });
       }
-    })
-  })
+    );
+  });
 }
 
 module.exports = {
   verify,
   firstPayment,
-  hasActiveSubscription
-}
+  hasActiveSubscription,
+};
