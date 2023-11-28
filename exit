@@ -1,0 +1,271 @@
+[33mcommit e3186bc4b51b0da0ab859939d62da0ca10d02837[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Tue Nov 21 10:22:28 2023 -0400
+
+    fix 1.3
+
+[33mcommit 38350fcb05c15839bf583241b11b3cf07da29a1f[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Tue Nov 21 10:14:58 2023 -0400
+
+    fix 1.2
+
+[33mcommit af8fe39d638b963ca7bf4a035dc2f9cc177d0f67[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Tue Nov 21 10:01:02 2023 -0400
+
+    fix 1.1
+
+[33mcommit 38cf6e66d9d2c1c02d8bebe560adfe4b9f098f18[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Tue Nov 21 09:51:12 2023 -0400
+
+    fix 1.0
+
+[33mcommit dce3d71b5b482ec09b84f7f865cec7d8f8d660a7[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Tue Nov 21 09:39:13 2023 -0400
+
+    correccion de email duplicado
+
+[33mcommit 981ec72682dd4725f74150c2dfef71efb7a1cb67[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Tue Nov 21 09:38:34 2023 -0400
+
+    correccion de email duplicado
+
+[33mcommit c7567c6c6bf9cd7772c56594e184f5eccc515bff[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Mon Nov 20 09:57:20 2023 -0400
+
+    Correccion de google
+
+[33mcommit c330c6a16d9fa9426561333503da660cc02a1de1[m
+Merge: d5cb002 c36b1f3
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Mon Nov 20 09:25:56 2023 -0400
+
+    Merge branch 'master' of https://github.com/TheApsuProgramador/node-railway
+
+[33mcommit d5cb0028269f79e724fde58459c1f103561da5c7[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Mon Nov 20 09:21:03 2023 -0400
+
+    inicio con google
+
+[33mcommit 453a5df6bb5f76781b6e9977bbcd242d370b6593[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Wed Oct 11 18:55:10 2023 -0400
+
+    config de cors
+
+[33mcommit c36b1f3e03cc68915234298eb9b307f820d353e5[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Wed Oct 4 20:57:56 2023 -0400
+
+    config en auth controller
+
+[33mcommit c3e1a126f79020083a55bb21222fcb871fe05e39[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Jul 23 10:14:10 2023 -0400
+
+    mysql2
+
+[33mcommit 6ebbeef8640228659bb068b1c4dbebf8a87f76f2[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 23 17:01:13 2023 -0400
+
+    verificar estado v.3
+
+[33mcommit 25c963895e0089931f9bd399d145742587b2860f[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 23 16:45:19 2023 -0400
+
+    verificar estado v.2
+
+[33mcommit 5c2bd248c520ce097fbab4b2ebd9f164d1b12d85[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 23 15:57:07 2023 -0400
+
+    verificar estado
+
+[33mcommit 06f935a7f605b463907034811ddf78127f71a2e3[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 23 13:37:27 2023 -0400
+
+    delete recurring v.6
+
+[33mcommit 05f7f60ad2db909a4abe5e854383639290493bc7[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 23 13:32:37 2023 -0400
+
+    delete recurring v.5
+
+[33mcommit 911e1f85a4d6336e0d96490f645d998312cded51[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 23 13:28:43 2023 -0400
+
+    delete recurring v.4
+
+[33mcommit e0f4b78e582d7a17b031e42aa71dd53e38193e0f[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 23 13:22:00 2023 -0400
+
+    delete recurring v.3
+
+[33mcommit 9520ca4212375a4986daf37be4260aa9dedf981f[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 23 13:17:09 2023 -0400
+
+    delete recurring v.2
+
+[33mcommit c2fec4c99759e65e9c631c766c50259e319cbb32[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 23 13:09:40 2023 -0400
+
+    delete recurring
+
+[33mcommit b4351c7c61c581854ded272e685ca776aac93af6[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 23 13:06:09 2023 -0400
+
+    manage exceptions
+
+[33mcommit ec467cf77c08f369c9b6ce4f9e89e61b9d0c551e[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 23 12:46:08 2023 -0400
+
+    fix date
+
+[33mcommit f9e938d60da8fba11957092c401fa2a21d4c9b5f[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 23 12:42:19 2023 -0400
+
+    control date v.2
+
+[33mcommit 81f309b854c67e28db36d157a7327e94b0d8216e[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 23 12:39:09 2023 -0400
+
+    control date
+
+[33mcommit d1f364cb53f48fd1d6db6d45ff708ef1eff3cba1[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 23 12:15:20 2023 -0400
+
+    Json preprend 2
+
+[33mcommit 9b9450782ca29beda524f5576669eca1586e12d9[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 23 12:04:58 2023 -0400
+
+    Json preprend
+
+[33mcommit ecb32a8b016e95bb10147e3eb7e8189f532d993d[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 23 11:55:30 2023 -0400
+
+    json
+
+[33mcommit cfc64a1fa7a040960b5a954d01afdcd0e150a4b3[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sat Apr 22 19:45:02 2023 -0400
+
+    version con request
+
+[33mcommit 4539b53fab6b952fc5f2c66592481db3d5a5ab9f[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sat Apr 22 19:40:33 2023 -0400
+
+    post verify
+
+[33mcommit 4f9eb2282017d5dc7d2be8d03efe01981ed1b568[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sat Apr 22 19:21:49 2023 -0400
+
+    correccion 500 v.2
+
+[33mcommit 6a753faf4564f265ddfcad599f1d095b8684e6d6[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sat Apr 22 19:20:44 2023 -0400
+
+    correccion 500
+
+[33mcommit 41f87f9ca525b0327ac96b2d577eb8f2e673e70f[m
+Merge: f812c33 e6d820f
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sat Apr 22 19:06:30 2023 -0400
+
+    Merge branch 'master' of https://github.com/TheApsu/node-js-mySql-railway
+
+[33mcommit f812c33b56db0636ff67e3713dc5a21390d7b9da[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sat Apr 22 19:06:13 2023 -0400
+
+    paypal ipn
+
+[33mcommit e6d820f7f4052b07afc610c6e785bc9b007bba73[m
+Author: TheApsu <86806963+TheApsu@users.noreply.github.com>
+Date:   Mon Apr 17 13:41:04 2023 -0400
+
+    Update README.md
+
+[33mcommit b6b408fd60358bfa3449f011e3726744504aca94[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Mon Apr 17 10:17:52 2023 -0400
+
+    update
+
+[33mcommit 7431323ff221c0893053a0eeeacb3c9859a395a3[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Mon Apr 17 10:12:38 2023 -0400
+
+    registro 2
+
+[33mcommit 4d83ccad9ddfb9108267b93e0339a556edbf5634[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Mon Apr 17 10:08:16 2023 -0400
+
+    registro
+
+[33mcommit 7a5d797d702270a8d4904967cefb939561236ed3[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Mon Apr 17 10:04:29 2023 -0400
+
+    no session
+
+[33mcommit 05d64d8055197056bb8c697c6f63324cfa60860b[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Mon Apr 17 10:03:01 2023 -0400
+
+    log en register
+
+[33mcommit e8fc7d0d2a2a85eee913946fbefcddab4acf7dfe[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Mon Apr 17 09:25:44 2023 -0400
+
+    no folder
+
+[33mcommit 1588ffae2774cc1cc40f5285de6780de1a75dfb7[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Mon Apr 17 09:23:52 2023 -0400
+
+    first commit
+
+[33mcommit d786f0e0bf7a7f4984932380eff2a89a7a97e781[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Mon Apr 17 09:19:12 2023 -0400
+
+    first commit
+
+[33mcommit cab5899bab54cc13d0e8ee3fbc95c71c8fc2977f[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 16 20:28:02 2023 -0400
+
+    otro commit
+
+[33mcommit ef850d44541f11f7cdca1cf458e67d03ea2d1042[m
+Author: Ricardo Duque <theapsu@gmail.com>
+Date:   Sun Apr 16 20:15:56 2023 -0400
+
+    mi first commit
